@@ -34,66 +34,64 @@ def list_tasks():
         with open("tasks.json", 'r') as f:
             data = json.load(f)
             return data
-    except Exception as e:
-        return e
+    except FileNotFoundError:
+        data = dict()
+        with open("tasks.json", 'w') as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+            return data
+
 
 def add_task(title, status = 'todo'):
     data = list_tasks()
-    create_time = datetime.today().isoformat(sep='T', timespec='seconds')
+    create_time = datetime.today().isoformat(sep=' ', timespec='seconds')
     update_time = create_time
-    if isinstance(data, dict):
-        data['id'].append(data['id'][-1] + 1)
-        data['title'].append(title)
-        data['status'].append(status)
-        data['update_time'].append(update_time)
-        data['create_time'].append(create_time)
+    if not data:
+        new_id = 1
     else:
-        data = {}
-        data['id'] = [1]
-        data['title'] = [title]
-        data['status'] = [status]
-        data['update_time'] = [update_time]
-        data['create_time'] = [create_time]
+        new_id = list(data.keys())[-1] + 1
+    maininfo = {'title': title,
+                'status': status,
+                'update_time': update_time,
+                'create_time': create_time}
+    data[new_id] = maininfo
     with open("tasks.json", 'w') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 def update_task(id, title, status):
     data = list_tasks()
-    if not isinstance(data, dict):
-        print(data)
+    if not data:
         return None
     else:
         update_time = datetime.today().isoformat(sep='T', timespec='seconds')
         if title:
-            data['title'][int(id) - 1] = title
+            data[id]['title'] = title
         if status:
-            data['status'][int(id) - 1] = status
-        data['update_time'][int(id) - 1] = update_time
+            data[id]['status'] = status
+        data[id]['update_time'] = update_time
     with open("tasks.json", 'w') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 def delete_task(id):
     data = list_tasks()
-    if not isinstance(data, dict):
-        print(data)
+    if not data:
         return None
     else:
-        data['id'].pop(int(id) - 1)
-        data['title'].pop(int(id) - 1)
-        data['status'].pop(int(id) - 1)
-        data['update_time'].pop(int(id) - 1)
-        data['create_time'].pop(int(id) - 1)
-        data['id'] = [x for x in range(1, len(data['id']) + 1)]
+        del data[id]
     with open("tasks.json", 'w') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
-if args.command == 'add':
-    add_task(args.title, args.status)
-elif args.command == 'list':
-    print(list_tasks())
-elif args.command == 'update':
-    update_task(args.id, args.title, args.status)
-elif args.command == 'delete':
-    delete_task(args.id)
-else:
-    print('Irregular command input, try again')
+
+def main():
+    if args.command == 'add':
+        add_task(args.title, args.status)
+    elif args.command == 'list':
+        print(list_tasks())
+    elif args.command == 'update':
+        update_task(args.id, args.title, args.status)
+    elif args.command == 'delete':
+        delete_task(args.id)
+    else:
+        print('Irregular command input, try again')
+
+if __name__ == '__main__':
+    main()

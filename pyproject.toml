@@ -1,0 +1,6 @@
+[project]
+name = "tasktracker"
+version = "1.0"
+
+[project.scripts]
+tasktracker = "tasktracker:main"
