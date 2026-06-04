@@ -1,6 +1,19 @@
 [project]
 name = "tasktracker"
+description = "A simple CLI application to manage tasks"
 version = "1.0"
+readme = "README.md"
+authors = [{name = "Aldiyar Kassenov"}]
+
+[project.urls]
+Repository = "https://github.com/T0Rt52/task_tracker"
 
 [project.scripts]
 tasktracker = "tasktracker:main"
+
+[tool.setuptools]
+py-modules = ["tasktracker"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
