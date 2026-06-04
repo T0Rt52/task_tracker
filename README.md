@@ -19,3 +19,6 @@ tasktracker update 1 -t "Watch a movie" -s done
 tasktracker delete 1  
 tasktracker list  
 tasktracker list -s done
+
+# project url
+https://github.com/T0Rt52/task_tracker
